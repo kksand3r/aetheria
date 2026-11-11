@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHERIA — The Alchemist's Floating Island | 3D WebGL Experience</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 3D WebGL Canvas -->
+    <canvas class="webgl"></canvas>
+
+    <!-- Loading Screen -->
+    <div id="loader" class="loader-overlay">
+        <div class="loader-content">
+            <div class="rune-spinner">🜁</div>
+            <h1 class="loader-title">AETHERIA</h1>
+            <p class="loader-subtitle">Awakening the Alchemist's Floating Island...</p>
+            <div class="progress-bar-container">
+                <div id="loader-bar" class="progress-bar"></div>
+            </div>
+            <span id="loader-percent" class="loader-percent">0%</span>
+        </div>
+    </div>
+
+    <!-- UI Overlay -->
+    <div class="ui-layer">
+        <!-- Top Header Bar -->
+        <header class="top-nav glass-panel">
+            <div class="brand">
+                <span class="brand-icon">✨</span>
+                <div>
+                    <h1 class="brand-title">AETHERIA</h1>
+                    <span class="brand-tag">The Alchemist's Floating Island</span>
+                </div>
+            </div>
+
+            <div class="nav-controls">
+                <button id="btn-sound" class="btn-icon glass-btn" title="Toggle Ambient Audio">
+                    <span id="sound-icon">🔊</span> <span class="btn-text">Audio</span>
+                </button>
+                <button id="btn-cinematic" class="btn-icon glass-btn" title="Cinematic Orbit Camera">
+                    <span id="cam-icon">🎥</span> <span class="btn-text">Cinematic</span>
+                </button>
+                <button id="btn-debug" class="btn-icon glass-btn" title="Toggle Debug Controls (HotKey: H)">
+                    <span>⚙️</span> <span class="btn-text">Controls</span>
+                </button>
+                <button id="btn-info" class="btn-icon glass-btn highlight" title="View Code Architecture & Documentation">
+                    <span>📜</span> <span class="btn-text">Architecture</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Hover Tooltip -->
+        <div id="tooltip" class="interactive-tooltip glass-panel hidden">
+            <div id="tooltip-title" class="tooltip-title">Object Name</div>
+            <div id="tooltip-desc" class="tooltip-desc">Object Description</div>
+            <div class="tooltip-hint">Left-click to interact</div>
+        </div>
+
+        <!-- Bottom Left: Alchemy Workshop / Elemental Codex -->
+        <section class="alchemy-panel glass-panel">
+            <div class="panel-header">
+                <span class="panel-icon">⚗️</span>
+                <div>
+                    <h2 class="panel-title">Alchemy Crucible</h2>
+                    <p class="panel-desc">Awaken crystals to distill elemental elixir</p>
+                </div>
+            </div>
+
+            <!-- Elemental Badges -->
+            <div class="element-grid">
+                <button class="element-badge elem-fire" data-elem="fire" title="Click to toggle Fire Crystal">
+                    <span class="elem-symbol">🔥</span>
+                    <span class="elem-name">Ignis</span>
+                    <span class="elem-state">Off</span>
+                </button>
+                <button class="element-badge elem-water" data-elem="water" title="Click to toggle Water Crystal">
+                    <span class="elem-symbol">💧</span>
+                    <span class="elem-name">Aquas</span>
+                    <span class="elem-state">Off</span>
+                </button>
+                <button class="element-badge elem-earth" data-elem="earth" title="Click to toggle Earth Crystal">
+                    <span class="elem-symbol">🌿</span>
+                    <span class="elem-name">Terra</span>
+                    <span class="elem-state">Off</span>
+                </button>
+                <button class="element-badge elem-arcane" data-elem="arcane" title="Click to toggle Arcane Crystal">
+                    <span class="elem-symbol">🔮</span>
+                    <span class="elem-name">Aether</span>
+                    <span class="elem-state">Off</span>
+                </button>
+            </div>
+
+            <!-- Current Potion State -->
+            <div class="potion-status">
+                <span class="status-label">Crucible Reaction:</span>
+                <span id="potion-name" class="potion-name">Dormant Ether</span>
+                <p id="potion-desc" class="potion-desc">Activate crystals or click the cauldron to brew.</p>
+            </div>
+
+            <div class="alchemy-actions">
+                <button id="btn-stir" class="btn-small glass-btn">🥄 Stir Cauldron</button>
+                <button id="btn-activate-all" class="btn-small glass-btn">✨ Awaken All</button>
+                <button id="btn-reset-all" class="btn-small glass-btn">↺ Reset</button>
+            </div>
+        </section>
+
+        <!-- Bottom Right: Camera Viewpoints & Day/Night -->
+        <section class="camera-panel glass-panel">
+            <div class="panel-header">
+                <span class="panel-icon">🧭</span>
+                <div>
+                    <h2 class="panel-title">Sanctuary Vistas</h2>
+                    <p class="panel-desc">Smooth GSAP camera transitions</p>
+                </div>
+            </div>
+
+            <div class="vista-buttons">
+                <button class="vista-btn glass-btn active" data-vista="overview">🗺️ Island Overview</button>
+                <button class="vista-btn glass-btn" data-vista="tower">🏰 Alchemist Tower</button>
+                <button class="vista-btn glass-btn" data-vista="crucible">⚗️ Cauldron & Runes</button>
+                <button class="vista-btn glass-btn" data-vista="waterfall">🌊 Sky Waterfall</button>
+            </div>
+
+            <!-- Day / Night Quick Buttons -->
+            <div class="time-presets">
+                <button class="time-btn" data-time="6.5" title="Sunrise">🌅 Dawn</button>
+                <button class="time-btn active" data-time="12.0" title="Midday">☀️ Noon</button>
+                <button class="time-btn" data-time="18.5" title="Sunset">🌇 Dusk</button>
+                <button class="time-btn" data-time="23.5" title="Midnight">🌙 Night</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Architecture & Code Documentation Modal -->
+    <div id="modal-info" class="modal-overlay hidden">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h2>🏛️ Project Architecture & Engineering Design</h2>
+                <button id="btn-close-modal" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>1. Modular OOP Architecture (Three.js Journey Standard)</h3>
+                <p>The codebase is constructed around clean Object-Oriented Programming (OOP) and strict Separation of Concerns:</p>
+                <ul>
+                    <li><strong>Experience (Singleton):</strong> Central coordinator orchestrating scenes, time, sizing, rendering, and lifecycle.</li>
+                    <li><strong>Utils & Managers:</strong> Dedicated decoupled managers for <code>Time</code> (delta-time RAF), <code>Sizes</code> (responsive DPI handling), <code>EventEmitter</code> (publish/subscribe bus), <code>AudioManager</code> (Web Audio API synthesis), and <code>Raycaster</code> (3D pointer picking).</li>
+                    <li><strong>World & Components:</strong> Self-contained modules (<code>Island</code>, <code>AlchemistTower</code>, <code>Waterfall</code>, <code>MagicCrystals</code>, <code>AlchemyCauldron</code>, <code>RuneSanctuary</code>, <code>FloatingClouds</code>, <code>MagicalParticles</code>).</li>
+                </ul>
+
+                <h3>2. Real-Time Dynamic & Interactive Systems</h3>
+                <ul>
+                    <li><strong>Dynamic Day/Night Celestial Cycle:</strong> Physically computed Sun and Moon coordinates driving Three.js <code>Sky</code> shader, synchronized directional lights, color temperatures, dynamic <code>FogExp2</code>, and 1,800 twinkling stars.</li>
+                    <li><strong>Elemental Alchemy Mechanics:</strong> 4 interactive crystals (Ignis, Aquas, Terra, Aether) casting dynamic light, emitting Bezier energy beams, and driving chemical reaction blends in the crucible.</li>
+                    <li><strong>Procedural Web Audio API:</strong> Custom real-time synthesis of pink-noise wind, waterfall rush, harmonic Solfeggio bell chimes, and bubbling liquid—zero external audio dependencies.</li>
+                    <li><strong>Interactive Raycasting & Camera Transitions:</strong> Object hover highlights, tooltips, responsive feedback, and GSAP smooth view transitions.</li>
+                </ul>
+
+                <h3>3. Rendering & Performance Optimizations</h3>
+                <ul>
+                    <li><strong>PBR Texturing:</strong> Physically-based materials with Color, Ambient Occlusion/Roughness/Metalness (ARM), and Normal maps encoded in modern compressed WebP format.</li>
+                    <li><strong>Optimized Shadow Maps:</strong> Directional shadows constrained with tightly fitted frustums, <code>PCFSoftShadowMap</code>, and normal bias preventing shadow acne.</li>
+                    <li><strong>Resource Management:</strong> Automated texture loading with fallbacks and complete GPU resource disposal in <code>destroy()</code>.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-modal-ok" class="btn-primary">Back to Island Experience</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
+

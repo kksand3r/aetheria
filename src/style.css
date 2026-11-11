@@ -1,0 +1,619 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0b0f19;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #f1f5f9;
+}
+
+/* 3D WebGL Canvas */
+.webgl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    outline: none;
+    z-index: 1;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.glass-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+}
+
+.glass-btn:active {
+    transform: translateY(0);
+}
+
+.glass-btn.active {
+    background: rgba(56, 189, 248, 0.25);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+}
+
+/* UI Layer */
+.ui-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px;
+}
+
+.ui-layer > * {
+    pointer-events: auto;
+}
+
+/* Top Nav */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon {
+    font-size: 26px;
+    filter: drop-shadow(0 0 10px #38bdf8);
+}
+
+.brand-title {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #ffffff 30%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brand-tag {
+    font-size: 11px;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.nav-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.btn-icon.highlight {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(59, 130, 246, 0.25));
+    border-color: rgba(168, 85, 247, 0.5);
+    color: #e9d5ff;
+}
+
+.btn-icon.highlight:hover {
+    border-color: #c084fc;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+/* Interactive Hover Tooltip */
+.interactive-tooltip {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    text-align: center;
+    pointer-events: none;
+    z-index: 20;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.2);
+}
+
+.interactive-tooltip.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+}
+
+.tooltip-title {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 2px;
+}
+
+.tooltip-desc {
+    font-size: 12px;
+    color: #cbd5e1;
+    margin-bottom: 4px;
+}
+
+.tooltip-hint {
+    font-size: 10px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Bottom Alchemy Panel */
+.alchemy-panel {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    width: 380px;
+    padding: 20px;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.panel-icon {
+    font-size: 24px;
+}
+
+.panel-title {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #f8fafc;
+}
+
+.panel-desc {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* Elemental Badges */
+.element-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.element-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 6px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    color: #94a3b8;
+}
+
+.element-badge:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.elem-symbol {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.elem-name {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.elem-state {
+    font-size: 9px;
+    text-transform: uppercase;
+    margin-top: 2px;
+    opacity: 0.7;
+}
+
+/* Elemental Active States */
+.element-badge.elem-fire.active {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+    color: #fca5a5;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+.element-badge.elem-water.active {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: #06b6d4;
+    color: #67e8f9;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+
+.element-badge.elem-earth.active {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+    color: #6ee7b7;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
+.element-badge.elem-arcane.active {
+    background: rgba(168, 85, 247, 0.2);
+    border-color: #a855f7;
+    color: #d8b4fe;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+}
+
+/* Potion Status */
+.potion-status {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.status-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.potion-name {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #38bdf8;
+    display: block;
+    margin-bottom: 4px;
+    transition: color 0.5s ease;
+}
+
+.potion-desc {
+    font-size: 11px;
+    color: #cbd5e1;
+    line-height: 1.4;
+}
+
+.alchemy-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-small {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 11px;
+}
+
+/* Bottom Right: Camera & Day/Night */
+.camera-panel {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    width: 320px;
+    padding: 20px;
+}
+
+.vista-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.vista-btn {
+    padding: 10px;
+    font-size: 12px;
+    text-align: left;
+}
+
+.time-presets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.time-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 6px 4px;
+    border-radius: 8px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.time-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.time-btn.active {
+    background: rgba(255, 255, 255, 0.16);
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+/* Loader Screen */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, #1e1b4b 0%, #030712 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loader-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-content {
+    text-align: center;
+    max-width: 420px;
+    padding: 30px;
+}
+
+.rune-spinner {
+    font-size: 54px;
+    color: #38bdf8;
+    margin-bottom: 16px;
+    display: inline-block;
+    animation: runePulse 2.5s infinite ease-in-out, runeSpin 8s infinite linear;
+    filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.6));
+}
+
+@keyframes runeSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes runePulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.9)); }
+}
+
+.loader-title {
+    font-family: 'Cinzel', serif;
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    background: linear-gradient(135deg, #ffffff, #93c5fd, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+
+.loader-subtitle {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 24px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #a855f7);
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+}
+
+.loader-percent {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+/* Architecture Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(3, 7, 18, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-card {
+    width: 90%;
+    max-width: 760px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border-color: rgba(168, 85, 247, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    color: #f8fafc;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.btn-close:hover {
+    color: #ffffff;
+}
+
+.modal-body {
+    overflow-y: auto;
+    padding-right: 12px;
+    line-height: 1.6;
+    font-size: 13.5px;
+    color: #cbd5e1;
+}
+
+.modal-body h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: #38bdf8;
+    margin: 18px 0 8px 0;
+}
+
+.modal-body ul {
+    margin-left: 20px;
+    margin-bottom: 14px;
+}
+
+.modal-body li {
+    margin-bottom: 6px;
+}
+
+.modal-body code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #f472b6;
+    font-family: monospace;
+}
+
+.modal-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    color: #0f172a;
+    font-weight: 700;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 860px) {
+    .alchemy-panel {
+        width: calc(100% - 48px);
+        bottom: 180px;
+    }
+    .camera-panel {
+        width: calc(100% - 48px);
+        bottom: 24px;
+        right: 24px;
+        left: 24px;
+    }
+    .top-nav {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
