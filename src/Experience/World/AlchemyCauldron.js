@@ -42,15 +42,20 @@ export default class AlchemyCauldron {
             roughness: 0.7
         })
 
-        // Liquid material inside
-        this.liquidMaterial = new THREE.MeshStandardMaterial({
+        // Liquid material inside (Advanced MeshPhysicalMaterial for viscous bubbling potion)
+        this.liquidMaterial = new THREE.MeshPhysicalMaterial({
             color: this.potionColor,
             emissive: this.potionColor,
             emissiveIntensity: 0.6,
-            roughness: 0.1,
-            metalness: 0.2,
+            roughness: 0.05,
+            metalness: 0.1,
+            transmission: 0.65,
+            ior: 1.42,
+            thickness: 1.1,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.08,
             transparent: true,
-            opacity: 0.92
+            opacity: 0.94
         })
     }
 

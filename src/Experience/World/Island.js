@@ -22,6 +22,7 @@ export default class Island {
         const rockColor = this.resources.items.floorColorTexture
         const rockARM = this.resources.items.floorARMTexture
         const rockNormal = this.resources.items.floorNormalTexture
+        const rockDisp = this.resources.items.floorDisplacementTexture
 
         if (rockColor) {
             rockColor.wrapS = THREE.RepeatWrapping
@@ -39,6 +40,11 @@ export default class Island {
             rockNormal.wrapT = THREE.RepeatWrapping
             rockNormal.repeat.set(4, 4)
         }
+        if (rockDisp) {
+            rockDisp.wrapS = THREE.RepeatWrapping
+            rockDisp.wrapT = THREE.RepeatWrapping
+            rockDisp.repeat.set(4, 4)
+        }
 
         this.rockMaterial = new THREE.MeshStandardMaterial({
             map: rockColor,
@@ -46,6 +52,9 @@ export default class Island {
             roughnessMap: rockARM,
             metalnessMap: rockARM,
             normalMap: rockNormal,
+            displacementMap: rockDisp,
+            displacementScale: 0.15,
+            displacementBias: -0.05,
             roughness: 0.9,
             metalness: 0.1,
             color: '#656158',

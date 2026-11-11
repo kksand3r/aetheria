@@ -16,15 +16,20 @@ export default class Waterfall {
     }
 
     setMaterials() {
-        // Procedural animated water material with dynamic specular shine
-        this.waterMaterial = new THREE.MeshStandardMaterial({
+        // Advanced MeshPhysicalMaterial for water with optical transmission, refraction and clearcoat
+        this.waterMaterial = new THREE.MeshPhysicalMaterial({
             color: '#38bdf8',
             emissive: '#0284c7',
             emissiveIntensity: 0.25,
-            roughness: 0.1,
-            metalness: 0.1,
+            roughness: 0.04,
+            metalness: 0.05,
+            transmission: 0.78,
+            ior: 1.333,          // Water optical refractive index
+            thickness: 0.9,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
             transparent: true,
-            opacity: 0.85
+            opacity: 0.9
         })
 
         // Edge foam material

@@ -166,6 +166,7 @@ export default class AlchemistTower {
         const doorAO = this.resources.items.doorAmbientOcclusionTexture
         const doorNormal = this.resources.items.doorNormalTexture
         const doorRoughness = this.resources.items.doorRoughnessTexture
+        const doorHeight = this.resources.items.doorHeightTexture
 
         if (doorColor) doorColor.colorSpace = THREE.SRGBColorSpace
 
@@ -176,6 +177,9 @@ export default class AlchemistTower {
             aoMap: doorAO,
             normalMap: doorNormal,
             roughnessMap: doorRoughness,
+            displacementMap: doorHeight,
+            displacementScale: 0.1,
+            displacementBias: -0.03,
             roughness: 0.6
         })
 
@@ -186,8 +190,8 @@ export default class AlchemistTower {
         frame.rotation.y = Math.PI / 4
         this.group.add(frame)
 
-        // Door panel
-        const doorGeo = new THREE.PlaneGeometry(1.4, 2.3)
+        // Door panel with subdivisions for vertex displacement
+        const doorGeo = new THREE.PlaneGeometry(1.4, 2.3, 64, 64)
         this.doorMesh = new THREE.Mesh(doorGeo, doorMaterial)
         this.doorMesh.position.set(1.95, 1.35, 1.95)
         this.doorMesh.rotation.y = Math.PI / 4

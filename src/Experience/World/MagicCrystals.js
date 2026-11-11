@@ -99,15 +99,20 @@ export default class MagicCrystals {
             pedShaft.castShadow = true
             crystalGroup.add(pedShaft)
 
-            // 2. Glowing Crystal Mesh
-            const crystalMat = new THREE.MeshStandardMaterial({
+            // 2. Glowing Crystal Mesh (Advanced MeshPhysicalMaterial with optical transmission & refraction)
+            const crystalMat = new THREE.MeshPhysicalMaterial({
                 color: elem.color,
                 emissive: elem.emissive,
-                emissiveIntensity: 0.8,
-                roughness: 0.15,
-                metalness: 0.1,
+                emissiveIntensity: 0.85,
+                roughness: 0.08,
+                metalness: 0.05,
+                transmission: 0.9,      // Glass / Gemstone optical transmission
+                ior: 1.54,               // Gemstone Index of Refraction (Quartz/Ruby/Sapphire)
+                thickness: 1.3,          // Volumetric refraction thickness
+                clearcoat: 1.0,          // Polished outer coat
+                clearcoatRoughness: 0.1,
                 transparent: true,
-                opacity: 0.9
+                opacity: 0.95
             })
 
             const mesh = new THREE.Mesh(crystalGeo, crystalMat)

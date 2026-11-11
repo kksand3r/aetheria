@@ -54,6 +54,11 @@ export default [
         type: 'texture',
         path: './floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.jpg'
     },
+    {
+        name: 'floorDisplacementTexture',
+        type: 'texture',
+        path: './floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.webp'
+    },
 
     // Bush / Foliage
     {
@@ -104,6 +109,11 @@ export default [
         name: 'doorAmbientOcclusionTexture',
         type: 'texture',
         path: './door/ambientOcclusion.jpg'
+    },
+    {
+        name: 'doorHeightTexture',
+        type: 'texture',
+        path: './door/height.webp'
     },
     {
         name: 'doorNormalTexture',
