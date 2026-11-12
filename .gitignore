@@ -7,6 +7,7 @@ dist/
 # Documentation & temporary reports
 *.pdf
 project_report.html
+project_guide_beginner.html
 
 
 # Logs
